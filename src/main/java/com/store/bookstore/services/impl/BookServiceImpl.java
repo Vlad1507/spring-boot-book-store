@@ -4,9 +4,15 @@ import com.store.bookstore.models.Book;
 import com.store.bookstore.repository.BookRepository;
 import com.store.bookstore.services.BookService;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BookServiceImpl implements BookService {
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
+
+    public BookServiceImpl(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
 
     @Override
     public Book save(Book book) {
