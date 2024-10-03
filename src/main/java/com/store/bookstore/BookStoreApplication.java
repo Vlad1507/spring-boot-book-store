@@ -21,18 +21,18 @@ public class BookStoreApplication {
     @Bean
     public CommandLineRunner commandLineRunner() {
         return args -> {
-            Book whiteFang = new Book();
-            whiteFang.setTitle("White Fang");
-            whiteFang.setAuthor("Jack London");
-            whiteFang.setDescription("It is a novel about a wild wolfdog's adventure "
+            Book book = new Book();
+            book.setTitle("White Fang");
+            book.setAuthor("Jack London");
+            book.setDescription("It is a novel about a wild wolfdog's adventure "
                     + "during the 1890s Klondike Gold Rush.");
-            whiteFang.setCoverImage(
+            book.setCoverImage(
                     "https://upload.wikimedia.org/wikipedia/commons/1/14/JackLondonwhitefang1.jpg"
             );
-            whiteFang.setIsbn("978-1-85813-740-7");
-            whiteFang.setPrice(BigDecimal.valueOf(20));
+            book.setIsbn("978-1-85813-740-7");
+            book.setPrice(BigDecimal.valueOf(20));
 
-            bookService.save(whiteFang);
+            bookService.save(book);
             System.out.println(bookService.findAll());
         };
     }
