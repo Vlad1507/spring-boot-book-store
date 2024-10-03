@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.store.book-store' is invalid and this project uses 'com.store.book_store' instead.
+* The original package name 'com.store.book-store' is invalid and this project uses 'com.store.bookstore' instead.
 
 # Getting Started
 
