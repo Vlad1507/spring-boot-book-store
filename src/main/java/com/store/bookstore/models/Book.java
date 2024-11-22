@@ -22,11 +22,11 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, name = "title")
+    @Column(nullable = false)
     private String title;
-    @Column(nullable = false, name = "author")
+    @Column(nullable = false)
     private String author;
-    @Column(nullable = false, unique = true, name = "isbn")
+    @Column(nullable = false, unique = true)
     private String isbn;
     @Column(nullable = false)
     private BigDecimal price;
