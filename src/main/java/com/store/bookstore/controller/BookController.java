@@ -4,6 +4,7 @@ import com.store.bookstore.dto.BookDto;
 import com.store.bookstore.dto.BookSearchParametersDto;
 import com.store.bookstore.dto.CreateBookRequestDto;
 import com.store.bookstore.services.BookService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public BookDto createBook(@RequestBody CreateBookRequestDto bookRequestDto) {
+    public BookDto createBook(@RequestBody @Valid CreateBookRequestDto bookRequestDto) {
         return bookService.save(bookRequestDto);
     }
 
