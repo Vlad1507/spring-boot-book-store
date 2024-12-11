@@ -1,14 +1,18 @@
 package com.store.bookstore.services.impl;
 
 import com.store.bookstore.dto.BookDto;
+import com.store.bookstore.dto.BookSearchParametersDto;
 import com.store.bookstore.dto.CreateBookRequestDto;
 import com.store.bookstore.exception.EntityNotFoundException;
 import com.store.bookstore.mapper.BookMapper;
 import com.store.bookstore.models.Book;
-import com.store.bookstore.repository.BookRepository;
+import com.store.bookstore.repository.SpecificationBuilder;
+import com.store.bookstore.repository.book.BookRepository;
 import com.store.bookstore.services.BookService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final SpecificationBuilder<Book> specificationBuilder;
 
     @Override
     public BookDto save(CreateBookRequestDto requestDto) {
@@ -24,8 +29,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> findAll() {
-        return bookRepository.findAll().stream()
+    public List<BookDto> findAll(Pageable pageable) {
+        return bookRepository.findAll(pageable).stream()
                 .map(bookMapper::toDto)
                 .toList();
     }
@@ -41,17 +46,24 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto update(Long id, CreateBookRequestDto bookRequestDto) {
-        bookRepository.findById(id)
+        Book book = bookRepository.findById(id)
                 .orElseThrow(
                         () -> new EntityNotFoundException("Can't get a book by id: " + id)
                 );
-        Book book = bookMapper.toModel(bookRequestDto);
-        book.setId(id);
+        bookMapper.updateBookFromDto(bookRequestDto, book);
         return bookMapper.toDto(bookRepository.save(book));
     }
 
     @Override
     public void deleteById(Long id) {
         bookRepository.deleteById(id);
+    }
+
+    @Override
+    public List<BookDto> searchBooks(BookSearchParametersDto params) {
+        Specification<Book> bookSpecification = specificationBuilder.build(params);
+        return bookRepository.findAll(bookSpecification).stream()
+                .map(bookMapper::toDto)
+                .toList();
     }
 }

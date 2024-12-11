@@ -1,10 +1,13 @@
 package com.store.bookstore.controller;
 
 import com.store.bookstore.dto.BookDto;
+import com.store.bookstore.dto.BookSearchParametersDto;
 import com.store.bookstore.dto.CreateBookRequestDto;
 import com.store.bookstore.services.BookService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +26,8 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
-    public List<BookDto> getAll() {
-        return bookService.findAll();
+    public List<BookDto> getAll(Pageable pageable) {
+        return bookService.findAll(pageable);
     }
 
     @GetMapping("/{id}")
@@ -34,7 +37,7 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public BookDto createBook(@RequestBody CreateBookRequestDto bookRequestDto) {
+    public BookDto createBook(@RequestBody @Valid CreateBookRequestDto bookRequestDto) {
         return bookService.save(bookRequestDto);
     }
 
@@ -47,5 +50,10 @@ public class BookController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) {
         bookService.deleteById(id);
+    }
+
+    @GetMapping("/search")
+    public List<BookDto> searchBooks(BookSearchParametersDto params) {
+        return bookService.searchBooks(params);
     }
 }
