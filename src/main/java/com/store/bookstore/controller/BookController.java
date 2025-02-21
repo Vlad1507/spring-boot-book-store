@@ -1,9 +1,9 @@
 package com.store.bookstore.controller;
 
-import com.store.bookstore.dto.BookDto;
-import com.store.bookstore.dto.BookSearchParametersDto;
-import com.store.bookstore.dto.CreateBookRequestDto;
-import com.store.bookstore.services.BookService;
+import com.store.bookstore.dto.book.BookDto;
+import com.store.bookstore.dto.book.BookSearchParametersDto;
+import com.store.bookstore.dto.book.CreateBookRequestDto;
+import com.store.bookstore.services.book.BookService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
