@@ -5,5 +5,4 @@ import com.store.bookstore.dto.user.UserRegistrationRequestDto;
 
 public interface UserService {
     UserDto register(UserRegistrationRequestDto request);
-
 }

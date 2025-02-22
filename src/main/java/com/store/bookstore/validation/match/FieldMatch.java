@@ -11,10 +11,9 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FieldMatch {
-    String[] value();
-
+    String field();
+    String fieldMatch();
     String message() default "Password fields do not match";
     Class<?> [] groups() default {};
     Class<? extends Payload>[] payload() default {};
-
 }
