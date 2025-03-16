@@ -4,5 +4,5 @@ import com.store.bookstore.dto.user.UserDto;
 import com.store.bookstore.dto.user.UserRegistrationRequestDto;
 
 public interface UserService {
-    UserDto register(UserRegistrationRequestDto request);
+    UserDto register(String email, UserRegistrationRequestDto request);
 }
