@@ -33,12 +33,12 @@ public class User implements UserDetails {
     private String email;
     @Column(nullable = false)
     private String password;
-    @Column(name = "first_name", nullable = false)
+    @Column(nullable = false)
     private String firstName;
     @Column(nullable = false)
     private String lastName;
     private String shippingAddress;
-    @Column(name = "is_deleted", nullable = false, columnDefinition = "TINYINT(1)")
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean isDeleted = false;
     @ManyToMany
     @JoinTable(

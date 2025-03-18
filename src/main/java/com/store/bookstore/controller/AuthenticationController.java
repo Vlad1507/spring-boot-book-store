@@ -25,6 +25,6 @@ public class AuthenticationController {
             description = "Register a new user if it's not exists already")
     public UserDto register(@RequestBody @Valid UserRegistrationRequestDto request)
             throws RegistrationException {
-        return userService.register(request.getEmail(), request);
+        return userService.register(request);
     }
 }

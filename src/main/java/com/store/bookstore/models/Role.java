@@ -29,7 +29,7 @@ public class Role implements GrantedAuthority {
         return role.name();
     }
 
-    enum RoleName {
+    public enum RoleName {
         USER, ADMIN
     }
 }
