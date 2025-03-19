@@ -2,6 +2,7 @@ package com.store.bookstore.services.user;
 
 import com.store.bookstore.dto.user.UserDto;
 import com.store.bookstore.dto.user.UserRegistrationRequestDto;
+import com.store.bookstore.exception.EntityNotFoundException;
 import com.store.bookstore.exception.RegistrationException;
 import com.store.bookstore.mapper.UserMapper;
 import com.store.bookstore.models.Role;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private static final Long USER_ID = 2L;
+    private static final Role.RoleName USER = Role.RoleName.USER;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
@@ -33,13 +34,13 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toModel(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRoles(Set.of(getRole()));
-        User savedUser = userRepository.save(user);
-        return userMapper.toDto(savedUser);
+        userRepository.save(user);
+        return userMapper.toDto(user);
     }
 
     private Role getRole() {
-        return roleRepository.findById(USER_ID)
-                .orElseThrow(() -> new RuntimeException("Can't find role by id: "
-                        + USER_ID));
+        return roleRepository.findByName(USER)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find role by name: "
+                        + USER));
     }
 }
