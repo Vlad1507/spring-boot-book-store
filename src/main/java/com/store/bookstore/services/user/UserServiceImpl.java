@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private static final Role.RoleName USER = Role.RoleName.USER;
+    private static final Role.RoleName USER = Role.RoleName.ROLE_USER;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
