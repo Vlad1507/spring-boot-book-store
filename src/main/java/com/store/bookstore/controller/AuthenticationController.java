@@ -33,6 +33,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "User login",
+            description = "Authorizes the user who is logged in"
+                    + " and provides them with a session key")
     public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto request) {
         return authenticationService.authenticate(request);
     }
