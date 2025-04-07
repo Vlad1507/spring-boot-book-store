@@ -22,11 +22,11 @@ public class Role implements GrantedAuthority {
     private Long id;
     @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
-    private RoleName role;
+    private RoleName roleName;
 
     @Override
     public String getAuthority() {
-        return role.name();
+        return roleName.name();
     }
 
     public enum RoleName {
