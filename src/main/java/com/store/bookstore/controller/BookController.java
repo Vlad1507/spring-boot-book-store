@@ -1,12 +1,16 @@
 package com.store.bookstore.controller;
 
 import com.store.bookstore.dto.book.BookDto;
+import com.store.bookstore.dto.book.BookDtoWithoutCategoryIds;
 import com.store.bookstore.dto.book.BookSearchParametersDto;
 import com.store.bookstore.dto.book.CreateBookRequestDto;
+import com.store.bookstore.models.Book;
 import com.store.bookstore.services.book.BookService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
