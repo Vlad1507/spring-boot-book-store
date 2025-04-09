@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Category management", description = "Endpoints for managing categories")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/categories")
@@ -32,24 +33,32 @@ public class CategoryController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Create category",
+            description = "Create a new category if it does not exist already")
     public CategoryDto createCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
         return categoryService.save(categoryRequestDto);
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/all")
+    @Operation(summary = "Get all categories",
+            description = "Return list of categories or empty list if no categories exist")
     public List<CategoryDto> getAll() {
         return categoryService.findAll();
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{id}")
+    @Operation(summary = "Receive category by id",
+            description = "Allows to get category by id")
     public CategoryDto getCategoryById(@PathVariable Long id) {
         return categoryService.getById(id);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
+    @Operation(summary = "Update category",
+            description = "Accept name and description of category by id")
     public CategoryDto updateCategory(
             @PathVariable Long id,
             @RequestBody CategoryRequestDto categoryRequestDto
@@ -60,13 +69,16 @@ public class CategoryController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete category",
+            description = "Delete category by id if exist")
     public void deleteCategory(@PathVariable Long id) {
         categoryService.deleteById(id);
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{id}/books")
-    @Operation()
+    @Operation(summary = "Get books by category",
+            description = "Allows to get list of books by category id")
     public List<BookDtoWithoutCategoryIds> getBooksByCategoryId(
             @PathVariable Long id, Pageable pageable) {
         return bookService.getBooksByCategoryId(id, pageable);
