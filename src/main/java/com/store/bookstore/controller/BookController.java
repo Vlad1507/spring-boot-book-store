@@ -4,13 +4,12 @@ import com.store.bookstore.dto.book.BookDto;
 import com.store.bookstore.dto.book.BookDtoWithoutCategoryIds;
 import com.store.bookstore.dto.book.BookSearchParametersDto;
 import com.store.bookstore.dto.book.CreateBookRequestDto;
-import com.store.bookstore.models.Book;
+import com.store.bookstore.dto.book.UpdateBookRequestDto;
 import com.store.bookstore.services.book.BookService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.MappingTarget;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +31,7 @@ public class BookController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping
-    public List<BookDto> getAll(Pageable pageable) {
+    public Page<BookDtoWithoutCategoryIds> getAll(Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
@@ -52,7 +51,7 @@ public class BookController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public BookDto update(@PathVariable Long id,
-                          @RequestBody @Valid CreateBookRequestDto bookRequestDto) {
+                          @RequestBody @Valid UpdateBookRequestDto bookRequestDto) {
         return bookService.update(id, bookRequestDto);
     }
 
@@ -65,7 +64,9 @@ public class BookController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/search")
-    public List<BookDto> searchBooks(BookSearchParametersDto params) {
-        return bookService.searchBooks(params);
+    public List<BookDtoWithoutCategoryIds> searchBooks(
+            @RequestBody BookSearchParametersDto params, Pageable pageable
+    ) {
+        return bookService.searchBooks(params, pageable);
     }
 }

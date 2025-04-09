@@ -13,5 +13,8 @@ public interface CategoryMapper {
 
     Category toModel(CategoryRequestDto categoryRequestDto);
 
-    void updateCategoryFromDB(CategoryRequestDto categoryRequestDto, @MappingTarget Category category);
+    void updateCategoryFromDB(
+            CategoryRequestDto categoryRequestDto,
+            @MappingTarget Category category
+    );
 }

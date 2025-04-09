@@ -4,6 +4,7 @@ import com.store.bookstore.config.MapperConfig;
 import com.store.bookstore.dto.book.BookDto;
 import com.store.bookstore.dto.book.BookDtoWithoutCategoryIds;
 import com.store.bookstore.dto.book.CreateBookRequestDto;
+import com.store.bookstore.dto.book.UpdateBookRequestDto;
 import com.store.bookstore.models.Book;
 import com.store.bookstore.models.Category;
 import java.util.Set;
@@ -20,7 +21,8 @@ public interface BookMapper {
 
     Book toModel(CreateBookRequestDto requestDto);
 
-    void updateBookFromDto(CreateBookRequestDto bookRequestDto, @MappingTarget Book book);
+    @Mapping(target = "categories", ignore = true)
+    void updateBookFromDto(UpdateBookRequestDto bookRequestDto, @MappingTarget Book book);
 
     BookDtoWithoutCategoryIds toDtoWithoutCategories(Book book);
 
@@ -30,5 +32,16 @@ public interface BookMapper {
                 .map(Category::getId)
                 .collect(Collectors.toSet());
         bookDto.setCategoryIds(categoryIds);
+    }
+
+    @AfterMapping
+    default void setCategories(
+            UpdateBookRequestDto updateBookRequestDto,
+            @MappingTarget Book book
+    ) {
+        Set<Category> categories = updateBookRequestDto.getCategoryIds().stream()
+                .map(Category::new)
+                .collect(Collectors.toSet());
+        book.setCategories(categories);
     }
 }
