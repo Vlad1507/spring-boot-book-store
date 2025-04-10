@@ -1,4 +1,9 @@
 package com.store.bookstore.dto.category;
 
-public record CategoryRequestDto(String name, String description) {
+import jakarta.validation.constraints.NotBlank;
+
+public record CategoryRequestDto(
+        @NotBlank
+        String name,
+        String description) {
 }

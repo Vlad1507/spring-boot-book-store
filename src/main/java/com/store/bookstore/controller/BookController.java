@@ -3,8 +3,7 @@ package com.store.bookstore.controller;
 import com.store.bookstore.dto.book.BookDto;
 import com.store.bookstore.dto.book.BookDtoWithoutCategoryIds;
 import com.store.bookstore.dto.book.BookSearchParametersDto;
-import com.store.bookstore.dto.book.CreateBookRequestDto;
-import com.store.bookstore.dto.book.UpdateBookRequestDto;
+import com.store.bookstore.dto.book.CreateUpdateBookRequestDto;
 import com.store.bookstore.services.book.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -53,7 +52,7 @@ public class BookController {
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Create book",
             description = "Allows to create book by required parameters")
-    public BookDto createBook(@RequestBody @Valid CreateBookRequestDto bookRequestDto) {
+    public BookDto createBook(@RequestBody @Valid CreateUpdateBookRequestDto bookRequestDto) {
         return bookService.save(bookRequestDto);
     }
 
@@ -62,7 +61,7 @@ public class BookController {
     @Operation(summary = "Update book",
             description = "Allows to update book's parameters by ID entered in the endpoint")
     public BookDto update(@PathVariable Long id,
-                          @RequestBody @Valid UpdateBookRequestDto bookRequestDto) {
+                          @RequestBody @Valid CreateUpdateBookRequestDto bookRequestDto) {
         return bookService.update(id, bookRequestDto);
     }
 

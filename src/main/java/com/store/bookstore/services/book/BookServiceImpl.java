@@ -3,8 +3,7 @@ package com.store.bookstore.services.book;
 import com.store.bookstore.dto.book.BookDto;
 import com.store.bookstore.dto.book.BookDtoWithoutCategoryIds;
 import com.store.bookstore.dto.book.BookSearchParametersDto;
-import com.store.bookstore.dto.book.CreateBookRequestDto;
-import com.store.bookstore.dto.book.UpdateBookRequestDto;
+import com.store.bookstore.dto.book.CreateUpdateBookRequestDto;
 import com.store.bookstore.exception.EntityNotFoundException;
 import com.store.bookstore.mapper.BookMapper;
 import com.store.bookstore.models.Book;
@@ -29,7 +28,7 @@ public class BookServiceImpl implements BookService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public BookDto save(CreateBookRequestDto requestDto) {
+    public BookDto save(CreateUpdateBookRequestDto requestDto) {
         Book book = bookMapper.toModel(requestDto);
         return bookMapper.toDto(bookRepository.save(book));
     }
@@ -49,7 +48,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto update(Long id, UpdateBookRequestDto bookRequestDto) {
+    public BookDto update(Long id, CreateUpdateBookRequestDto bookRequestDto) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(
                         () -> new EntityNotFoundException("Can't get a book by id: " + id)
@@ -75,16 +74,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDtoWithoutCategoryIds> getBooksByCategoryId(
+    public Page<BookDtoWithoutCategoryIds> getBooksByCategoryId(
             Long categoryId, Pageable pageable
     ) {
-        if (categoryRepository.existsById(categoryId)) {
-            List<Book> books = bookRepository
-                    .findAllByCategoriesContains(Set.of(new Category(categoryId)), pageable);
-            return books.stream()
-                    .map(bookMapper::toDtoWithoutCategories)
-                    .toList();
+        if (!categoryRepository.existsById(categoryId)) {
+            throw new EntityNotFoundException("Can't find category by id: " + categoryId);
         }
-        throw new EntityNotFoundException("Can't find category by id: " + categoryId);
+        Page<Book> books = bookRepository
+                .findAllByCategoriesContains(Set.of(new Category(categoryId)), pageable);
+        return books.map(bookMapper::toDtoWithoutCategories);
     }
 }
