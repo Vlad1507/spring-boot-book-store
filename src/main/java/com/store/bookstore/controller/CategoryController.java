@@ -45,8 +45,8 @@ public class CategoryController {
     @GetMapping("/all")
     @Operation(summary = "Get all categories",
             description = "Return list of categories or empty list if no categories exist")
-    public List<CategoryDto> getAll() {
-        return categoryService.findAll();
+    public List<CategoryDto> getAll(Pageable pageable) {
+        return categoryService.findAll(pageable);
     }
 
     @PreAuthorize("hasRole('USER')")
