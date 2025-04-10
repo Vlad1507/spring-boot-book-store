@@ -61,6 +61,7 @@ public class CategoryController {
     @PutMapping("/{id}")
     @Operation(summary = "Update category",
             description = "Accept name and description of category by id")
+    @ResponseStatus(HttpStatus.OK)
     public CategoryDto updateCategory(
             @PathVariable Long id,
             @RequestBody @Valid CategoryRequestDto categoryRequestDto
