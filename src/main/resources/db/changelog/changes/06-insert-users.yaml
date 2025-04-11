@@ -6,27 +6,11 @@ databaseChangeLog:
         - insert:
             tableName: users
             columns:
-              - column: {name: email, value: "benbigb@gmail.com"}
-              - column: {name: password, value: "$10$lptrGdPUDBpu/yp1iiRrteeZ6vmrFCrJ/E55pVQfO7JDBQKZXo8ba"}
-              - column: {name: first_name, value: "Ben"}
-              - column: {name: last_name, value: "Benings"}
-              - column: {name: shipping_address, value: "Bruno avenue 16/8"}
-        - insert:
-            tableName: users
-            columns:
               - column: {name: email, value: "sam1spam@gmail.com"}
               - column: {name: password, value: "$2a$10$P94lmNOY/8QEm52Y7x3Y8.ITUHDSyDF8jQOTdvCUM3rh1nHJHb9nq"}
               - column: {name: first_name, value: "Sam"}
               - column: {name: last_name, value: "White"}
               - column: {name: shipping_address, value: "Spam st. 50/2"}
-        - insert:
-            tableName: users
-            columns:
-              - column: {name: email, value: "ben1@gmail.com"}
-              - column: {name: password, value: "$10$CJ2rNHKFfAMfBrAMW86k..DbdibZ06KuAae.Ai1bYnVdO7RFND4jC"}
-              - column: {name: first_name, value: "Ben"}
-              - column: {name: last_name, value: "Arrow"}
-              - column: {name: shipping_address, value: "Ocean st 12/2"}
         - insert:
             tableName: users
             columns:

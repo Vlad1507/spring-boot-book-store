@@ -12,7 +12,7 @@ import com.store.bookstore.models.ShoppingCart;
 import com.store.bookstore.models.User;
 import com.store.bookstore.repository.cart.CartItemRepository;
 import com.store.bookstore.repository.cart.ShoppingCartRepository;
-import java.util.Optional;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +26,23 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCartMapper shoppingCartMapper;
     private final CartItemRepository cartItemRepository;
-    private CartItemMapper cartItemMapper;
+    private final CartItemMapper cartItemMapper;
 
     @Override
-    public Page<CartDto> getShoppingCart(User user, Pageable pageable) {
+    public CartDto getShoppingCart(User user, Pageable pageable) {
         ShoppingCart shoppingCart = shoppingCartRepository.findByUser(user).orElseThrow(
-                () -> new EntityNotFoundException("Can't get shopping cart by user: " + user.getEmail())
+                () -> new EntityNotFoundException("Can't get shopping cart by user: "
+                        + user.getEmail())
         );
-        return shoppingCartMapper.toDto(shoppingCart);
+        Page<CartItem> cartItems = cartItemRepository.getByShoppingCart(shoppingCart, pageable);
+        Set<CartItem> setItems = new HashSet<>(cartItems.getContent());
+        Set<CartItemDto> itemsDto = setItems.stream()
+                .map(cartItemMapper::toDto)
+                .collect(Collectors.toSet());
+
+        CartDto cartDto = shoppingCartMapper.toDto(shoppingCart);
+        cartDto.cartItems().addAll(itemsDto);
+        return cartDto;
     }
 
     @Override

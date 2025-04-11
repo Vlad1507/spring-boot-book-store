@@ -8,16 +8,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.util.Set;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.SQLDelete;
@@ -37,7 +35,7 @@ public class ShoppingCart {
     @NotNull
     @OneToOne(fetch = FetchType.LAZY)
     private User user;
-    @ManyToMany
+    @OneToMany
     @JoinTable(
             name = "carts_items",
             joinColumns = @JoinColumn(name = "shopping_cart_id"),
@@ -45,6 +43,6 @@ public class ShoppingCart {
     )
     @Cascade(CascadeType.REMOVE)
     private Set<CartItem> cartItems;
-    @Column( nullable = false,  columnDefinition = "TINYINT(1)")
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean isDeleted = false;
 }

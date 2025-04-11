@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-user_shopping_cart-table
+      author: vlad_a
+      changes:
+        createTable:
+          tableName: user_shopping_cart
+          columns:
+            - column:
+                name: user_id
+                type: bigint
+                constraints:
+                  nullable: false
+                  foreignKeyName: fk_user
+                  reference: users(id)
+            - column:
+                name: shopping_carts_id
+                type: bigint
+                constraints:
+                  nullable: false
+                  foreignKeyName: fk_shopping_cart
+                  reference: shopping_carts(id)
+            - addPrimaryKey:
+                columnNames: user_id, shopping_carts_id
+                constraintName: pk_user_shopping_carts
