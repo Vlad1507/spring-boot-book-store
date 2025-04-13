@@ -1,8 +1,9 @@
 package com.store.bookstore.services.cart;
 
-import com.store.bookstore.dto.cart.CartDto;
 import com.store.bookstore.dto.cart.CartItemDto;
 import com.store.bookstore.dto.cart.CartItemRequestDto;
+import com.store.bookstore.dto.cart.CartItemWithBookTitleDto;
+import com.store.bookstore.dto.cart.ShoppingCartDto;
 import com.store.bookstore.dto.cart.UpdateCartItemRequestDto;
 import com.store.bookstore.exception.EntityNotFoundException;
 import com.store.bookstore.mapper.CartItemMapper;
@@ -29,18 +30,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemMapper cartItemMapper;
 
     @Override
-    public CartDto getShoppingCart(User user, Pageable pageable) {
+    public ShoppingCartDto getShoppingCart(User user, Pageable pageable) {
         ShoppingCart shoppingCart = shoppingCartRepository.findByUser(user).orElseThrow(
                 () -> new EntityNotFoundException("Can't get shopping cart by user: "
                         + user.getEmail())
         );
         Page<CartItem> cartItems = cartItemRepository.getByShoppingCart(shoppingCart, pageable);
         Set<CartItem> setItems = new HashSet<>(cartItems.getContent());
-        Set<CartItemDto> itemsDto = setItems.stream()
-                .map(cartItemMapper::toDto)
+        Set<CartItemWithBookTitleDto> itemsDto = setItems.stream()
+                .map(cartItemMapper::toDtoWithBookTitle)
                 .collect(Collectors.toSet());
 
-        CartDto cartDto = shoppingCartMapper.toDto(shoppingCart);
+        ShoppingCartDto cartDto = shoppingCartMapper.toDto(shoppingCart);
         cartDto.cartItems().addAll(itemsDto);
         return cartDto;
     }

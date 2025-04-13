@@ -14,14 +14,14 @@ databaseChangeLog:
                   primaryKey: true
                   nullable: false
             - column:
-                name: books_id
+                name: book_id
                 type: bigint
                 constraints:
                   nullable: false
                   foreignKeyName: fk_book
                   reference: books(id)
             - column:
-                name: shopping_carts_id
+                name: shopping_cart_id
                 type: bigint
                 constraints:
                   nullable: false

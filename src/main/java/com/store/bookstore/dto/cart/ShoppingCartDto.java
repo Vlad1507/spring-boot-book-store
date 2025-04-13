@@ -2,9 +2,9 @@ package com.store.bookstore.dto.cart;
 
 import java.util.Set;
 
-public record CartDto(
+public record ShoppingCartDto(
         Long cartId,
         Long userId,
-        Set<CartItemDto> cartItems
+        Set<CartItemWithBookTitleDto> cartItems
 ) {
 }

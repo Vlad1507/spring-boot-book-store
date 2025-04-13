@@ -14,6 +14,14 @@ databaseChangeLog:
         - insert:
             tableName: users
             columns:
+              - column: {name: email, value: "alice@gmail.com"}
+              - column: {name: password, value: "$2a$10$badUhenESIDAqSz1bk9rmeQ1MT3rB97KzzPavH7RvLmgRHMxAHWvG"}
+              - column: {name: first_name, value: "Alice"}
+              - column: {name: last_name, value: "Bloom"}
+              - column: {name: shipping_address, value: "Block st. 1/23"}
+        - insert:
+            tableName: users
+            columns:
               - column: {name: email, value: "vo_admin@gmail.com"}
               - column: {name: password, value: "$2a$10$Yk.hHcJpUwkA3u1PaC07GOmiYTiNWypeGMEAlPYIKoraQ00u8Ukku"}
               - column: {name: first_name, value: "Valior"}
