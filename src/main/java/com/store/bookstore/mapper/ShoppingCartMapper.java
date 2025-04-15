@@ -5,8 +5,8 @@ import com.store.bookstore.dto.cart.CartItemWithBookTitleDto;
 import com.store.bookstore.dto.cart.ShoppingCartDto;
 import com.store.bookstore.models.CartItem;
 import com.store.bookstore.models.ShoppingCart;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -20,6 +20,13 @@ public interface ShoppingCartMapper {
 
     @Named("setCartItems")
     default Set<CartItemWithBookTitleDto> setCartItems(Set<CartItem> cartItems) {
-        return new HashSet<>();
+        return cartItems.stream()
+                .map(cartItem -> new CartItemWithBookTitleDto(
+                        cartItem.getId(),
+                        cartItem.getBook().getId(),
+                        cartItem.getBook().getTitle(),
+                        cartItem.getQuantity())
+                )
+                .collect(Collectors.toSet());
     }
 }

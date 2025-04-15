@@ -6,10 +6,8 @@ import com.store.bookstore.dto.cart.ShoppingCartDto;
 import com.store.bookstore.dto.cart.UpdateCartItemRequestDto;
 import com.store.bookstore.models.User;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Pageable;
 
 public interface ShoppingCartService {
-    ShoppingCartDto getShoppingCart(User user, Pageable pageable);
 
     CartItemDto addItemToCart(User user, @Valid CartItemRequestDto cartItemRequestDto);
 
@@ -17,4 +15,8 @@ public interface ShoppingCartService {
                                        UpdateCartItemRequestDto updateCartItemRequestDto);
 
     void deleteItemFromCartById(User user, Long itemId);
+
+    void createShoppingCartForUser(User user);
+
+    ShoppingCartDto getShoppingCartWithItems(User user);
 }

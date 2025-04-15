@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -35,9 +34,9 @@ public class ShoppingCartController {
     @GetMapping
     @Operation(summary = "Get shopping cart",
             description = "Return shopping cart and items in it")
-    public ShoppingCartDto getShoppingCart(Authentication authentication, Pageable pageable) {
+    public ShoppingCartDto getShoppingCart(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        return shoppingCartService.getShoppingCart(user, pageable);
+        return shoppingCartService.getShoppingCartWithItems(user);
     }
 
     @PreAuthorize("hasRole('USER')")
