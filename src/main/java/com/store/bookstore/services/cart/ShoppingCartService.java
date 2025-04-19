@@ -1,11 +1,9 @@
 package com.store.bookstore.services.cart;
 
-import com.store.bookstore.dto.cart.CartItemDto;
 import com.store.bookstore.dto.cart.CartItemRequestDto;
 import com.store.bookstore.dto.cart.ShoppingCartDto;
 import com.store.bookstore.dto.cart.UpdateCartItemRequestDto;
 import com.store.bookstore.models.User;
-import jakarta.validation.Valid;
 
 public interface ShoppingCartService {
 

@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,4 +26,9 @@ public class CartItem {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
     private int quantity;
+
+    public void dismissShoppingCart() {
+        this.shoppingCart.dismissCartItem(this);
+        this.shoppingCart = null;
+    }
 }

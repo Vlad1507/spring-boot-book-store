@@ -11,9 +11,6 @@ import com.store.bookstore.models.ShoppingCart;
 import com.store.bookstore.models.User;
 import com.store.bookstore.repository.cart.CartItemRepository;
 import com.store.bookstore.repository.cart.ShoppingCartRepository;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +54,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void deleteItemFromCartById(User user, Long itemId) {
         ShoppingCart shoppingCartByUser = getShoppingCart(user);
         CartItem cartItemFromDb = getCartItem(itemId, shoppingCartByUser);
+        shoppingCartByUser.dismissCartItem(cartItemFromDb);
+        cartItemFromDb.dismissShoppingCart();
         cartItemRepository.deleteById(cartItemFromDb.getId());
     }
 

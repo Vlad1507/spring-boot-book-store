@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -35,4 +34,8 @@ public class ShoppingCart {
     private Set<CartItem> cartItems = new HashSet<>();
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean isDeleted = false;
+
+    public void dismissCartItem(CartItem cartItem) {
+        this.cartItems.remove(cartItem);
+    }
 }
