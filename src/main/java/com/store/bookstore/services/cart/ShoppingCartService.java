@@ -9,9 +9,9 @@ import jakarta.validation.Valid;
 
 public interface ShoppingCartService {
 
-    CartItemDto addItemToCart(User user, @Valid CartItemRequestDto cartItemRequestDto);
+    ShoppingCartDto addItemToCart(User user, CartItemRequestDto cartItemRequestDto);
 
-    CartItemDto updateCartItemQuantity(User user, Long itemId,
+    ShoppingCartDto updateCartItemQuantity(User user, Long itemId,
                                        UpdateCartItemRequestDto updateCartItemRequestDto);
 
     void deleteItemFromCartById(User user, Long itemId);

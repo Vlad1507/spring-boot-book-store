@@ -44,7 +44,7 @@ public class ShoppingCartController {
     @Operation(summary = "Add an item",
             description = "Allows add the item into shopping cart")
     @ResponseStatus(HttpStatus.CREATED)
-    public CartItemDto addItemToShoppingCart(
+    public ShoppingCartDto addItemToShoppingCart(
             @RequestBody @Valid CartItemRequestDto cartItemRequestDto,
             Authentication authentication
     ) {
@@ -57,7 +57,7 @@ public class ShoppingCartController {
     @Operation(summary = "Update item quantity",
             description = "Allows to change quantity of items in shopping cart")
     @ResponseStatus(HttpStatus.OK)
-    public CartItemDto updateCartItemQuantity(
+    public ShoppingCartDto updateCartItemQuantity(
             @PathVariable Long itemId,
             @RequestBody @Valid UpdateCartItemRequestDto updateCartItemRequestDto,
             Authentication authentication
