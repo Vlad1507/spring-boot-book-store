@@ -29,3 +29,9 @@ databaseChangeLog:
       file: db/changelog/changes/14-create-order_items-table.yaml
   - include:
       file: db/changelog/changes/15-create-orders_order_items-table.yaml
+  - include:
+      file: db/changelog/changes/16-insert-books.yaml
+  - include:
+      file: db/changelog/changes/17-insert-categories.yaml
+  - include:
+      file: db/changelog/changes/18-insert-books_categories.yaml

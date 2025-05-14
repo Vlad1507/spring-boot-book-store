@@ -42,7 +42,7 @@ public class OrderController {
     }
 
     @Operation
-    @PreAuthorize("hasROle('USER')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping
     public Page<OrderDto> getOrderHistory(Pageable pageable, Authentication authentication) {
         User user = (User) authentication.getPrincipal();

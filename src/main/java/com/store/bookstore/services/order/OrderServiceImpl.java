@@ -14,7 +14,6 @@ import com.store.bookstore.models.ShoppingCart;
 import com.store.bookstore.models.User;
 import com.store.bookstore.repository.book.BookRepository;
 import com.store.bookstore.repository.cart.ShoppingCartRepository;
-import com.store.bookstore.repository.order.OrderItemRepository;
 import com.store.bookstore.repository.order.OrderRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,7 +29,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final OrderItemRepository orderItemRepository;
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
     private final BookRepository bookRepository;
@@ -52,9 +50,9 @@ public class OrderServiceImpl implements OrderService {
         order.setShippingAddress(orderRequestDto.shippingAddress());
         order.setOrderDate(LocalDateTime.now());
         order.setStatus(Order.Status.PENDING);
+        order.setOrderItems(orderItems);
         orderItems.forEach(orderItem -> orderItem.setOrder(order));
         orderRepository.save(order);
-        orderItemRepository.saveAll(orderItems);
         return orderMapper.toDto(order);
     }
 
@@ -88,7 +86,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto updateOrderStatus(User user, Long orderId, String status) {
-        Order orderById = getOrderByUser(user, orderId, Pageable.unpaged());
+        Order orderById = orderRepository.findById(orderId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Can't get a order "
+                                + "by id: " + orderId)
+                );
         orderById.setStatus(Order.Status.valueOf(status.toUpperCase()));
         return orderMapper.toDto(orderRepository.save(orderById));
     }

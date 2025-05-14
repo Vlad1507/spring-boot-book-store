@@ -8,19 +8,19 @@ import com.store.bookstore.models.Order;
 import com.store.bookstore.models.OrderItem;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 @Mapper(config = MapperConfig.class)
 public interface OrderMapper {
     Order toModel(OrderRequestDto orderRequestDto);
 
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "orderItemsDtos", source = "orderItems", qualifiedByName = "setOrderItems")
+    @Mapping(target = "orderItemsDtos", source = "orderItems")
     OrderDto toDto(Order order);
 
-    @Named("setOrderItems")
+    @AfterMapping
     default Set<OrderItemDto> setOrderItems(Set<OrderItem> orderItems) {
         return orderItems.stream()
                 .map(item ->
