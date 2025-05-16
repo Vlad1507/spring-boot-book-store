@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-books
+      author: vlad_a
+      changes:
+        - insert:
+            tableName: books
+            columns:
+              - column: {name: title, value: "White Fang"}
+              - column: {name: author, value: "Jack London"}
+              - column: {name: isbn, value: "978-1-85813-740-7"}
+              - column: {name: price, value: 40}
+              - column: {name: description, value: "An adventure novel about the journey of a wild wolf dog to domestication in Canada."}
+              - column: {name: cover_image, value: "https://upload.wikimedia.org/wikipedia/commons/1/14/JackLondonwhitefang1.jpg"}
+        - insert:
+            tableName: books
+            columns:
+              - column: {name: title, value: "The Intelligent Investor"}
+              - column: {name: author, value: "Benjamin Graham"}
+              - column: {name: isbn, value: "978-0-06055-566-5"}
+              - column: {name: price, value: 64}
+              - column: {name: description, value: "The book provides strategies on how to successfully use value investing in the stock market."}
+              - column: {name: cover_image, value: "https://upload.wikimedia.org/wikipedia/en/5/57/Theintelligentinvestor.jpg"}
+        - insert:
+            tableName: books
+            columns:
+              - column: {name: title, value: "Dracula"}
+              - column: {name: author, value: "Bram Stoker"}
+              - column: {name: isbn, value: "978-0-19478-943-1"}
+              - column: {name: price, value: 52}
+              - column: {name: description, value: "An epistolary novel, the narrative is related through letters, diary entries, and newspaper articles."}
+              - column: {name: cover_image, value: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Dracula_1st_ed_cover_reproduction.jpg/800px-Dracula_1st_ed_cover_reproduction.jpg"}
+        - insert:
+            tableName: books
+            columns:
+              - column: {name: title, value: "Les Misérables"}
+              - column: {name: author, value: "Victor Hugo"}
+              - column: {name: isbn, value: "978-1-60710-816-0"}
+              - column: {name: price, value: 45}
+              - column: {name: description, value: "The novel describes the life of convict Jean Valjean, who has reformed and embarked on the path of goodness, but his past continues to haunt him."}
+              - column: {name: cover_image, value: "https://m.media-amazon.com/images/I/41CNEKXgt5L.jpg"}

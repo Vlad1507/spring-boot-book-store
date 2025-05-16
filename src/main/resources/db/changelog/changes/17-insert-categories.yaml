@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-categories
+      author: vlad_a
+      changes:
+        - insert:
+            tableName: categories
+            columns:
+              - column: {name: name, value: "sci-fi"}
+              - column: {name: description, value: "science fiction books"}
+        - insert:
+            tableName: categories
+            columns:
+              - column: {name: name, value: "adventure"}
+              - column: {name: description, value: "long exciting journeys books"}
+        - insert:
+            tableName: categories
+            columns:
+              - column: {name: name, value: "investment"}
+              - column: {name: description, value: "books about money management"}
+        - insert:
+            tableName: categories
+            columns:
+              - column: {name: name, value: "detective"}
+              - column: {name: description, value: "novels with mysterious plots"}
+        - insert:
+            tableName: categories
+            columns:
+              - column: {name: name, value: "horror"}
+              - column: {name: description, value: "spooky books"}
