@@ -24,14 +24,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "", description = "")
+@Tag(name = "Order management ", description = "Endpoints for managing orders")
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
 
-    @Operation
+    @Operation(summary = "Add an order",
+            description = "Allow to create an order and return order with items")
     @PreAuthorize("hasRole('USER')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -41,7 +42,8 @@ public class OrderController {
         return orderService.createOrder(user, orderRequestDto);
     }
 
-    @Operation
+    @Operation(summary = "Get order history",
+            description = "Return history of orders with order items")
     @PreAuthorize("hasRole('USER')")
     @GetMapping
     public Page<OrderDto> getOrderHistory(Pageable pageable, Authentication authentication) {
@@ -49,7 +51,8 @@ public class OrderController {
         return orderService.getAllOrders(user, pageable);
     }
 
-    @Operation
+    @Operation(summary = "Get page of order items",
+            description = "Return order items by order id")
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{orderId}/items")
     public Page<OrderItemDto> getOrderItemsByOrderId(
@@ -61,7 +64,8 @@ public class OrderController {
         return orderService.getAllItemsByOrderId(user, orderId, pageable);
     }
 
-    @Operation
+    @Operation(summary = "Get order item by id",
+            description = "Return an order item by the item id of a specific order")
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{orderId}/items/{itemId}")
     public OrderItemDto getOrderItemByItemId(
@@ -73,7 +77,8 @@ public class OrderController {
         return orderService.getOrderItemByOrderIdAndItemId(user, orderId, itemId);
     }
 
-    @Operation
+    @Operation(summary = "Update order status",
+            description = "Allows to update the status of an order by its id")
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{orderId}")
     @ResponseStatus(HttpStatus.OK)

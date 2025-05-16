@@ -14,6 +14,7 @@ import com.store.bookstore.models.ShoppingCart;
 import com.store.bookstore.models.User;
 import com.store.bookstore.repository.book.BookRepository;
 import com.store.bookstore.repository.cart.ShoppingCartRepository;
+import com.store.bookstore.repository.order.OrderItemRepository;
 import com.store.bookstore.repository.order.OrderRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
     private final BookRepository bookRepository;
@@ -74,8 +76,9 @@ public class OrderServiceImpl implements OrderService {
     public OrderItemDto getOrderItemByOrderIdAndItemId(User user, Long orderId, Long itemId) {
         Set<OrderItem> orderItemByUserIdAndOrderId =
                 getOrderByUser(user, orderId, Pageable.unpaged()).getOrderItems();
+        OrderItem orderItemById = getOrderItemById(itemId);
         OrderItem orderItem = orderItemByUserIdAndOrderId.stream()
-                .filter(item -> item.getId().equals(itemId))
+                .filter(item -> item.getId().equals(orderItemById.getId()))
                 .findFirst()
                 .orElseThrow(
                         () -> new EntityNotFoundException("Can't get a order item "
@@ -122,6 +125,14 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(
                         () -> new EntityNotFoundException("Can't get a order "
                                 + "by id: " + orderId)
+                );
+    }
+
+    private OrderItem getOrderItemById(Long itemId) {
+        return orderItemRepository.findById(itemId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Can't get a order item "
+                                + "by id: " + itemId)
                 );
     }
 
