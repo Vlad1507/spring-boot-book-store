@@ -60,6 +60,7 @@ public class BookController {
     @PutMapping("/{id}")
     @Operation(summary = "Update book",
             description = "Allows to update book's parameters by ID entered in the endpoint")
+    @ResponseStatus(HttpStatus.OK)
     public BookDto update(@PathVariable Long id,
                           @RequestBody @Valid CreateUpdateBookRequestDto bookRequestDto) {
         return bookService.update(id, bookRequestDto);
