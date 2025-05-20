@@ -4,7 +4,7 @@ import com.store.bookstore.dto.order.OrderDto;
 import com.store.bookstore.dto.order.OrderItemDto;
 import com.store.bookstore.dto.order.OrderRequestDto;
 import com.store.bookstore.exception.EntityNotFoundException;
-import com.store.bookstore.exception.ItemsNotFoundException;
+import com.store.bookstore.exception.OrderProcessingException;
 import com.store.bookstore.mapper.OrderItemMapper;
 import com.store.bookstore.mapper.OrderMapper;
 import com.store.bookstore.models.Book;
@@ -25,8 +25,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
@@ -43,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
                         () -> new EntityNotFoundException("Can't get a shopping cart "
                                 + "by user id: " + user.getId())
         );
-        Set<OrderItem> orderItems = getOrderItemsFromShoppingCart(shoppingCart);
+        Set<OrderItem> orderItems = getOrderItemsFromShoppingCartOrThrowIfEmpty(shoppingCart);
         shoppingCart.clear();
         shoppingCartRepository.save(shoppingCart);
         Order order = new Order();
@@ -98,9 +100,10 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toDto(orderRepository.save(orderById));
     }
 
-    private Set<OrderItem> getOrderItemsFromShoppingCart(ShoppingCart shoppingCart) {
+    private Set<OrderItem> getOrderItemsFromShoppingCartOrThrowIfEmpty(ShoppingCart shoppingCart) {
         if (shoppingCart.getCartItems().isEmpty()) {
-            throw new ItemsNotFoundException("Not items found in shopping cart to create an order");
+            throw new OrderProcessingException("There is no items in shopping cart."
+                    + " Unable to create an order");
         }
         return shoppingCart.getCartItems().stream()
                 .map(cartItem -> {

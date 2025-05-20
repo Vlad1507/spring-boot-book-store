@@ -1,6 +1,6 @@
 package com.store.bookstore.dto.order;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
-public record OrderRequestDto(@NotNull String shippingAddress) {
+public record OrderRequestDto(@NotBlank String shippingAddress) {
 }
