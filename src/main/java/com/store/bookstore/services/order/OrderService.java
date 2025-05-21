@@ -4,12 +4,11 @@ import com.store.bookstore.dto.order.OrderDto;
 import com.store.bookstore.dto.order.OrderItemDto;
 import com.store.bookstore.dto.order.OrderRequestDto;
 import com.store.bookstore.models.User;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface OrderService {
-    OrderDto createOrder(User user, @Valid OrderRequestDto orderRequestDto);
+    OrderDto createOrder(User user, OrderRequestDto orderRequestDto);
 
     Page<OrderDto> getAllOrders(User user, Pageable pageable);
 

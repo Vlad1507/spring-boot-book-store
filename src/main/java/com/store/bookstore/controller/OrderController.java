@@ -3,6 +3,7 @@ package com.store.bookstore.controller;
 import com.store.bookstore.dto.order.OrderDto;
 import com.store.bookstore.dto.order.OrderItemDto;
 import com.store.bookstore.dto.order.OrderRequestDto;
+import com.store.bookstore.dto.order.OrderStatusRequestDto;
 import com.store.bookstore.models.User;
 import com.store.bookstore.services.order.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -83,9 +83,9 @@ public class OrderController {
     @PatchMapping("/{orderId}")
     @ResponseStatus(HttpStatus.OK)
     public OrderDto updateOrderStatus(@PathVariable Long orderId,
-                                      @RequestParam String status,
+                                      @RequestBody OrderStatusRequestDto orderStatusRequestDto,
                                       Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        return orderService.updateOrderStatus(user, orderId, status);
+        return orderService.updateOrderStatus(user, orderId, orderStatusRequestDto.status());
     }
 }
