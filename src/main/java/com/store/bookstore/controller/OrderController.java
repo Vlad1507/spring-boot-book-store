@@ -82,9 +82,11 @@ public class OrderController {
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{orderId}")
     @ResponseStatus(HttpStatus.OK)
-    public OrderDto updateOrderStatus(@PathVariable Long orderId,
-                                      @RequestBody OrderStatusRequestDto orderStatusRequestDto,
-                                      Authentication authentication) {
+    public OrderDto updateOrderStatus(
+            @PathVariable Long orderId,
+            @RequestBody @Valid OrderStatusRequestDto orderStatusRequestDto,
+            Authentication authentication
+    ) {
         User user = (User) authentication.getPrincipal();
         return orderService.updateOrderStatus(user, orderId, orderStatusRequestDto.status());
     }
