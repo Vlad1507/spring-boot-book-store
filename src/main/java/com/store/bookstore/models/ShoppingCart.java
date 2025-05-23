@@ -38,4 +38,8 @@ public class ShoppingCart {
     public void dismissCartItem(CartItem cartItem) {
         this.cartItems.remove(cartItem);
     }
+
+    public void clear() {
+        cartItems.clear();
+    }
 }
