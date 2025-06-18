@@ -1,5 +1,8 @@
-FROM openjdk:18-jdk-slim AS builder
+FROM maven:3.8.6-openjdk-18-slim AS builder
 WORKDIR application
+COPY pom.xml .
+COPY checkstyle.xml .
+COPY src ./src
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
@@ -13,3 +16,4 @@ COPY --from=builder application/application/ ./
 ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
 EXPOSE 8080
 EXPOSE 5005
+
