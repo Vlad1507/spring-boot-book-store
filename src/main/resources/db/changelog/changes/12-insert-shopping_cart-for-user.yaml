@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-shopping_cart-for-user
+      author: vlad_a
+      changes:
+        - insert:
+            tableName: shopping_carts
+            columns:
+              - column:
+                  name: id
+                  valueComputed: "(SELECT id FROM users WHERE email = 'sam1spam@gmail.com')"
+        - insert:
+            tableName: shopping_carts
+            columns:
+              - column:
+                  name: id
+                  valueComputed: "(SELECT id FROM users WHERE email = 'alice@gmail.com')"

@@ -22,7 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE users SET is_deleted = TRUE WHERE id = ?")
 @SQLRestriction(value = "is_deleted = false")
 @Table(name = "users")
 public class User implements UserDetails {
