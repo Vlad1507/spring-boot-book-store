@@ -7,7 +7,6 @@ import com.store.bookstore.exception.RegistrationException;
 import com.store.bookstore.mapper.UserMapper;
 import com.store.bookstore.models.Role;
 import com.store.bookstore.models.User;
-import com.store.bookstore.repository.cart.ShoppingCartRepository;
 import com.store.bookstore.repository.role.RoleRepository;
 import com.store.bookstore.repository.user.UserRepository;
 import com.store.bookstore.services.cart.ShoppingCartService;
@@ -26,7 +25,6 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCartService shoppingCartService;
 
     @Override
