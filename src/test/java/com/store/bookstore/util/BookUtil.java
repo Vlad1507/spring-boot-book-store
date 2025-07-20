@@ -9,28 +9,11 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import lombok.NonNull;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 public class BookUtil {
-
-    public static Book getBook() {
-        Book book = new Book();
-        book.setId(1L);
-        book.setAuthor("Jack London");
-        book.setTitle("White Fang");
-        book.setIsbn("978-1-85813-740-7");
-        book.setPrice(BigDecimal.valueOf(40.00));
-        book.setDescription("An adventure novel about the journey "
-                + "of a wild wolf dog to domestication in Canada.");
-        book.setCoverImage("https://upload.wikimedia.org/wikipedia/commons/1/14/"
-                + "JackLondonwhitefang1.jpg");
-        book.setCategories(Set.of(getCategory()));
-        return book;
-    }
 
     public static Book getBook(CreateUpdateBookRequestDto bookRequestDto) {
         Book book = new Book();
