@@ -21,8 +21,12 @@ import org.springframework.test.context.jdbc.Sql;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class BookRepositoryTest {
 
+    private final BookRepository bookRepository;
+
     @Autowired
-    private BookRepository bookRepository;
+    public BookRepositoryTest(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
 
     @Test
     @DisplayName("Search for all books by category ID with an existing category ID. "
@@ -68,8 +72,6 @@ public class BookRepositoryTest {
         List<Book> actual = bookRepository
                 .findAllByCategoriesContains(Set.of(category), Pageable.unpaged())
                 .getContent();
-        actual.forEach(System.out::println);
-
         Assertions.assertEquals(Collections.emptyList(), actual);
     }
 

@@ -2,6 +2,7 @@ package com.store.bookstore.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,7 +25,6 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +49,13 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BookControllerTest {
     private static MockMvc mockMvc;
+
+    private final ObjectMapper objectMapper;
+
     @Autowired
-    private ObjectMapper objectMapper;
-    private CreateUpdateBookRequestDto createBookRequestDto;
-    private BookDto bookDto;
+    public BookControllerTest(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @BeforeAll
     static void beforeAll(@Autowired WebApplicationContext applicationContext) {
@@ -60,12 +63,6 @@ public class BookControllerTest {
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())
                 .build();
-    }
-
-    @BeforeEach
-    void setUp() {
-        createBookRequestDto = BookUtil.getBookRequestDto();
-        bookDto = BookUtil.getBookDto();
     }
 
     @Sql(scripts = "classpath:database/books/delete_third_book.sql",
@@ -91,7 +88,7 @@ public class BookControllerTest {
         );
         assertNotNull(actual);
         assertNotNull(actual.getId());
-        EqualsBuilder.reflectionEquals(actual, expected, "id");
+        assertTrue(EqualsBuilder.reflectionEquals(actual, expected, "id"));
     }
 
     @WithMockUser(username = "admin", roles = {"ADMIN"})
@@ -99,9 +96,9 @@ public class BookControllerTest {
     @DisplayName("Create book with invalid data throws an error")
     void createBook_AddInvalidIsbnBookToDB_StatusBadRequest() throws Exception {
         String fieldName = "isbn";
-        CreateUpdateBookRequestDto requestDto = createBookRequestDto;
-        requestDto.setIsbn("1234578956");
-        String jsonRequest = objectMapper.writeValueAsString(requestDto);
+        CreateUpdateBookRequestDto createBookRequestDto = BookUtil.getBookRequestDto();
+        createBookRequestDto.setIsbn("1234578956");
+        String jsonRequest = objectMapper.writeValueAsString(createBookRequestDto);
 
         MvcResult mvcResult = mockMvc.perform(post("/books")
                         .content(jsonRequest)
@@ -139,8 +136,6 @@ public class BookControllerTest {
                         new TypeReference<>() {
                         });
         List<BookDtoWithoutCategoryIds> expected = BookUtil.listBookDtoWithoutCategory();
-        System.out.println(actual);
-        System.out.println(expected);
         assertEquals(expected, actual);
     }
 
@@ -159,7 +154,7 @@ public class BookControllerTest {
                         mvcResult.getResponse().getContentAsString(),
                         BookDto.class
                 );
-        EqualsBuilder.reflectionEquals(response, expected);
+        assertTrue(EqualsBuilder.reflectionEquals(response, expected));
     }
 
     @WithMockUser(username = "user", roles = "USER")
@@ -172,16 +167,14 @@ public class BookControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andReturn();
-        System.out.println(mvcResult.getResponse().getContentAsString());
         ExceptionDto actual = objectMapper.readValue(
                 mvcResult.getResponse().getContentAsString(),
                 ExceptionDto.class
         );
-        System.out.println(actual);
         ExceptionDto expected = new ExceptionDto(
                 HttpStatus.NOT_FOUND,
                 "Can't get a book by id: " + invalidId);
-        EqualsBuilder.reflectionEquals(actual, expected, "localDateTime");
+        assertTrue(EqualsBuilder.reflectionEquals(actual, expected, "localDateTime"));
     }
 
     @Sql(scripts = "classpath:database/books/update_first_book.sql",
@@ -191,6 +184,7 @@ public class BookControllerTest {
     @DisplayName("Should update a book and return the book dto if valid data was presented")
     void update_ShouldUpdateExistedBook_StatusOk() throws Exception {
         long id = 1L;
+        CreateUpdateBookRequestDto createBookRequestDto = BookUtil.getBookRequestDto();
         createBookRequestDto.setTitle("The Call of the Wild");
         createBookRequestDto.setPrice(BigDecimal.valueOf(100));
         String jsonRequest = objectMapper.writeValueAsString(createBookRequestDto);
@@ -203,10 +197,10 @@ public class BookControllerTest {
         BookDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
                 BookDto.class);
 
-        BookDto expected = bookDto;
+        BookDto expected = BookUtil.getBookDto();
         expected.setTitle("The Call of the Wild");
         expected.setPrice(BigDecimal.valueOf(100));
-        EqualsBuilder.reflectionEquals(actual, expected, "categoryIds");
+        assertTrue(EqualsBuilder.reflectionEquals(actual, expected, "categoryIds"));
     }
 
     @WithMockUser(username = "admin", roles = {"ADMIN"})
@@ -214,6 +208,7 @@ public class BookControllerTest {
     @DisplayName("Should throw an error if trying to update a book by the invalid id")
     void update_UpdateBookWithInvalidId_StatusNotFound() throws Exception {
         long invalidId = 43L;
+        CreateUpdateBookRequestDto createBookRequestDto = BookUtil.getBookRequestDto();
         createBookRequestDto.setTitle("The Call of the Wild");
         createBookRequestDto.setPrice(BigDecimal.valueOf(100));
         String jsonRequest = objectMapper.writeValueAsString(createBookRequestDto);
@@ -229,7 +224,7 @@ public class BookControllerTest {
         ExceptionDto expected = new ExceptionDto(
                 HttpStatus.NOT_FOUND,
                 "Can't get a book by id: " + invalidId);
-        EqualsBuilder.reflectionEquals(actual, expected);
+        assertTrue(EqualsBuilder.reflectionEquals(actual, expected, "localDateTime"));
     }
 
     @Sql(scripts = "classpath:database/books/recover_first_book.sql",
@@ -262,7 +257,7 @@ public class BookControllerTest {
                 ExceptionDto.class);
         ExceptionDto expected = new ExceptionDto(HttpStatus.NOT_FOUND,
                 "Can't find book by id: " + invalidId);
-        EqualsBuilder.reflectionEquals(actual, expected, "localDateTime");
+        assertTrue(EqualsBuilder.reflectionEquals(actual, expected, "localDateTime"));
     }
 
     @WithMockUser(username = "user", roles = "USER")

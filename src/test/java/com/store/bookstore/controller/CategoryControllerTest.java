@@ -2,6 +2,7 @@ package com.store.bookstore.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,7 +24,6 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +45,13 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CategoryControllerTest {
     private static MockMvc mockMvc;
+
+    private final ObjectMapper objectMapper;
+
     @Autowired
-    private ObjectMapper objectMapper;
-    private CategoryDto categoryDto;
+    public CategoryControllerTest(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @BeforeAll
     static void beforeAll(@Autowired WebApplicationContext applicationContext) {
@@ -55,11 +59,6 @@ public class CategoryControllerTest {
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())
                 .build();
-    }
-
-    @BeforeEach
-    void setUp() {
-        categoryDto = CategoryUtil.getCategoryDto();
     }
 
     @Sql(scripts = "classpath:database/categories/remove_third_category_table.sql",
@@ -81,9 +80,6 @@ public class CategoryControllerTest {
         CategoryDto actual = objectMapper.readValue(
                 mvcResult.getResponse().getContentAsString(),
                 CategoryDto.class);
-
-        System.out.println(actual);
-        System.out.println(expected);
         assertNotNull(actual);
         assertNotNull(actual.id());
         assertEquals(actual, expected);
@@ -108,7 +104,7 @@ public class CategoryControllerTest {
         ValidationExceptionDto expected = new ValidationExceptionDto(
                 HttpStatus.BAD_REQUEST,
                 Set.of("name must not be blank"));
-        EqualsBuilder.reflectionEquals(actual, expected, "localDateTime");
+        assertTrue(EqualsBuilder.reflectionEquals(actual, expected, "localDateTime"));
     }
 
     @WithMockUser(username = "user", roles = "USER")
@@ -145,7 +141,7 @@ public class CategoryControllerTest {
         CategoryDto actual = objectMapper.readValue(
                 mvcResult.getResponse().getContentAsString(),
                 CategoryDto.class);
-        CategoryDto expected = categoryDto;
+        CategoryDto expected = CategoryUtil.getCategoryDto();
         assertEquals(actual, expected);
     }
 
@@ -166,7 +162,7 @@ public class CategoryControllerTest {
         ExceptionDto actual = new ExceptionDto(
                 HttpStatus.NOT_FOUND,
                 "Can't find a category by id: " + invalidId);
-        EqualsBuilder.reflectionEquals(expected, actual, "localDateTime");
+        assertTrue(EqualsBuilder.reflectionEquals(expected, actual, "localDateTime"));
     }
 
     @Sql(scripts = "classpath:database/categories/update_first_category.sql",
@@ -217,8 +213,8 @@ public class CategoryControllerTest {
                 ExceptionDto.class);
         ExceptionDto expected = new ExceptionDto(
                 HttpStatus.NOT_FOUND,
-                "Can't find a category by id: " + invalidId);
-        EqualsBuilder.reflectionEquals(expected, actual, "localDateTime");
+                "Can't find category by id: " + invalidId);
+        assertTrue(EqualsBuilder.reflectionEquals(expected, actual, "localDateTime"));
     }
 
     @WithMockUser(username = "admin", roles = {"ADMIN"})
@@ -244,7 +240,7 @@ public class CategoryControllerTest {
         ValidationExceptionDto expected = new ValidationExceptionDto(
                 HttpStatus.BAD_REQUEST,
                 Set.of("name must not be blank"));
-        EqualsBuilder.reflectionEquals(expected, actual, "localDateTime");
+        assertTrue(EqualsBuilder.reflectionEquals(expected, actual, "localDateTime"));
     }
 
     @Sql(scripts = "classpath:database/categories/recover_first_category.sql",
@@ -278,7 +274,7 @@ public class CategoryControllerTest {
         ExceptionDto expected = new ExceptionDto(
                 HttpStatus.NOT_FOUND,
                 "Can't find a category by id: " + invalidId);
-        EqualsBuilder.reflectionEquals(actual, expected, "localDateTime");
+        assertTrue(EqualsBuilder.reflectionEquals(actual, expected, "localDateTime"));
     }
 
     @Sql(scripts = {"classpath:database/books/insert_2_books.sql",
@@ -332,6 +328,6 @@ public class CategoryControllerTest {
                 ExceptionDto.class);
         ExceptionDto expected = new ExceptionDto(HttpStatus.NOT_FOUND,
                 "Can't find category by id: " + invalidId);
-        EqualsBuilder.reflectionEquals(actual, expected, "localDateTime");
+        assertTrue(EqualsBuilder.reflectionEquals(actual, expected, "localDateTime"));
     }
 }

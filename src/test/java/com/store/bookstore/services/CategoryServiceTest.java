@@ -18,110 +18,110 @@ import com.store.bookstore.services.category.CategoryServiceImpl;
 import com.store.bookstore.util.CategoryUtil;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class CategoryServiceTest {
     private static final Long CATEGORY_ID = 1L;
 
-    @Mock
-    private CategoryRepository categoryRepository;
-    @Mock
-    private CategoryMapper categoryMapper;
-    @InjectMocks
-    private CategoryServiceImpl categoryService;
+    @MockitoBean
+    private final CategoryRepository categoryRepository;
+    @MockitoBean
+    private final CategoryMapper categoryMapper;
+    private final CategoryServiceImpl categoryService;
 
-    private Category category;
-    private CategoryDto categoryDto;
-    private CategoryRequestDto requestDto;
-    private CategoryRequestDto invalidRequestDto;
-    private Pageable pageable;
-
-    @BeforeEach
-    public void setUp() {
-        category = CategoryUtil
-                .getCategory();
-        categoryDto = CategoryUtil.getCategoryDto();
-        requestDto = CategoryUtil.getCategoryRequestDto();
-        invalidRequestDto = CategoryUtil.getInvalidCategoryRequestDto();
-        pageable = CategoryUtil.getPageable();
+    @Autowired
+    public CategoryServiceTest(CategoryRepository categoryRepository,
+                               CategoryMapper categoryMapper,
+                               CategoryServiceImpl categoryService) {
+        this.categoryRepository = categoryRepository;
+        this.categoryMapper = categoryMapper;
+        this.categoryService = categoryService;
     }
 
     @Test
     @DisplayName("Should save category and return corresponding response dto")
     void save_saveCorrectCategory_ShouldSaveCategory() {
+        Category category = CategoryUtil.getCategory();
+        CategoryDto expected = CategoryUtil.getCategoryDto();
+        CategoryRequestDto requestDto = CategoryUtil.getCategoryRequestDto();
+
         when(categoryMapper.toModel(requestDto)).thenReturn(category);
         when(categoryRepository.save(category)).thenReturn(category);
-        when(categoryMapper.toDto(category)).thenReturn(categoryDto);
+        when(categoryMapper.toDto(category)).thenReturn(expected);
 
         CategoryDto actual = categoryService.save(requestDto);
-
-        assertEquals(categoryDto, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
     @DisplayName("Should throw an error if a request field name is blank")
     void save_saveNullValuesCategory_ShouldThrowError() {
+        CategoryRequestDto invalidRequestDto = CategoryUtil.getInvalidCategoryRequestDto();
         String expected = "Null value for field: name";
+
         when(categoryMapper.toModel(invalidRequestDto))
                 .thenThrow(new NullPointerException(expected));
 
         Exception actual = assertThrows(NullPointerException.class,
                 () -> categoryService.save(invalidRequestDto)
         );
-
         assertEquals(expected, actual.getMessage());
     }
 
     @Test
     @DisplayName("Should return paginated list of categories")
     void findAll_searchValidCategories_ShouldReturnCategories() {
+        Category category = CategoryUtil.getCategory();
+        CategoryDto categoryDto = CategoryUtil.getCategoryDto();
+        Pageable pageable = CategoryUtil.getPageable();
         Page<Category> page = new PageImpl<>(List.of(category), pageable, 1);
+
         when(categoryRepository.findAll(pageable)).thenReturn(page);
         when(categoryMapper.toDto(category)).thenReturn(categoryDto);
 
         List<CategoryDto> actual = categoryService.findAll(pageable);
         List<CategoryDto> expected = List.of(categoryDto);
-
         assertEquals(actual, expected);
     }
 
     @Test
     @DisplayName("Should return a category dto by valid id")
     void getById_SearchByValidId_ShouldReturnBook() {
+        Category category = CategoryUtil.getCategory();
+        CategoryDto expected = CategoryUtil.getCategoryDto();
+
         when(categoryRepository.findById(CATEGORY_ID)).thenReturn(Optional.of(category));
-        when(categoryMapper.toDto(category)).thenReturn(categoryDto);
+        when(categoryMapper.toDto(category)).thenReturn(expected);
 
         CategoryDto actual = categoryService.getById(CATEGORY_ID);
-
-        assertEquals(categoryDto, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
     @DisplayName("Should throw an error when category id is not valid")
     void getById_SearchByInvalidId_ShouldReturnException() {
         Long invalidId = 911L;
-        when(categoryRepository.findById(invalidId)).thenReturn(Optional.empty());
         String expected = "Can't find a category by id: " + invalidId;
+
+        when(categoryRepository.findById(invalidId)).thenReturn(Optional.empty());
 
         Exception actual = assertThrows(EntityNotFoundException.class,
                 () -> categoryService.getById(invalidId));
-
         assertEquals(expected, actual.getMessage());
     }
 
     @Test
     @DisplayName("Should update existed category and return category dto with new parameters")
     void update_UpdateExistedCategory_ShouldUpdateCategory() {
+        Category category = CategoryUtil.getCategory();
         CategoryRequestDto updateRequestDto =
                 new CategoryRequestDto("drama", "story about wildlife");
         CategoryDto expected = new CategoryDto(
@@ -129,16 +129,16 @@ public class CategoryServiceTest {
                 "drama",
                 "story about wildlife"
         );
+
         when(categoryRepository.findById(CATEGORY_ID)).thenReturn(Optional.of(category));
         doNothing().when(categoryMapper).updateCategoryFromDB(updateRequestDto, category);
         when(categoryRepository.save(category)).thenReturn(category);
         when(categoryMapper.toDto(category)).thenReturn(expected);
 
         CategoryDto actual = categoryService.update(1L, updateRequestDto);
-
         assertEquals(expected, actual);
         verify(categoryMapper, times(1))
-                .updateCategoryFromDB(updateRequestDto, this.category);
+                .updateCategoryFromDB(updateRequestDto, category);
     }
 
     @Test
@@ -148,11 +148,11 @@ public class CategoryServiceTest {
         CategoryRequestDto updateRequestDto =
                 new CategoryRequestDto("drama", "story about wildlife");
         String expected = "Can't find category by id: " + invalidId;
+
         when(categoryRepository.findById(invalidId)).thenReturn(Optional.empty());
 
         Exception actual = assertThrows(EntityNotFoundException.class,
                 () -> categoryService.update(invalidId, updateRequestDto));
-
         assertEquals(expected, actual.getMessage());
     }
 
@@ -163,6 +163,7 @@ public class CategoryServiceTest {
 
         categoryService.deleteById(CATEGORY_ID);
 
+        verify(categoryRepository, times(1)).existsById(CATEGORY_ID);
         verify(categoryRepository, times(1)).deleteById(CATEGORY_ID);
         verifyNoMoreInteractions(categoryRepository);
     }
@@ -172,11 +173,11 @@ public class CategoryServiceTest {
     void deleteById_DeleteCategoryWithInvalidId_ShouldThrowError() {
         Long invalidId = 100L;
         String expected = "Can't find a category by id: " + invalidId;
+
         when(categoryRepository.existsById(invalidId)).thenReturn(false);
 
         Exception actual = assertThrows(EntityNotFoundException.class,
                 () -> categoryService.deleteById(invalidId));
-
         assertEquals(expected, actual.getMessage());
     }
 }

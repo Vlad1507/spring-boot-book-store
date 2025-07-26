@@ -154,7 +154,7 @@ public class BookUtil {
         secondBookDto.setTitle("The Intelligent Investor");
         secondBookDto.setAuthor("Benjamin Graham");
         secondBookDto.setIsbn("978-0-06055-566-5");
-        secondBookDto.setPrice(BigDecimal.valueOf(64));
+        secondBookDto.setPrice(new BigDecimal("64.00"));
         secondBookDto.setDescription("The book provides strategies on how to successfully use"
                 + " value investing in the stock market.");
         secondBookDto.setCoverImage("https://upload.wikimedia.org/wikipedia/en/5/57/"
