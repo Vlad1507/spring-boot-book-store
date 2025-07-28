@@ -4,8 +4,13 @@ import com.store.bookstore.dto.book.BookDto;
 import com.store.bookstore.dto.book.BookDtoWithoutCategoryIds;
 import com.store.bookstore.dto.book.BookSearchParametersDto;
 import com.store.bookstore.dto.book.CreateUpdateBookRequestDto;
+import com.store.bookstore.dto.exception.ExceptionDto;
+import com.store.bookstore.dto.exception.ValidationExceptionDto;
 import com.store.bookstore.services.book.BookService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -39,6 +44,12 @@ public class BookController {
         return bookService.findAll(pageable);
     }
 
+    @ApiResponse(responseCode = "404",
+            description = "Couldn't find the book",
+            content = @Content(schema = @Schema(
+                    implementation = ExceptionDto.class
+            ))
+    )
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{id}")
     @Operation(summary = "Return book by id",
@@ -47,6 +58,12 @@ public class BookController {
         return bookService.findById(id);
     }
 
+    @ApiResponse(responseCode = "400",
+            description = "Validation failed",
+            content = @Content(schema = @Schema(
+                    implementation = ValidationExceptionDto.class
+            ))
+    )
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)

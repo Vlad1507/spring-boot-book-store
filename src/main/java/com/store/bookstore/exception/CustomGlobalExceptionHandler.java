@@ -1,5 +1,6 @@
 package com.store.bookstore.exception;
 
+import com.store.bookstore.dto.exception.ExceptionDto;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,8 +46,10 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     @ExceptionHandler(value = EntityNotFoundException.class)
-    private static ResponseEntity<String> handleEntityNotFoundException(
+    private static ResponseEntity<ExceptionDto> handleEntityNotFoundException(
             EntityNotFoundException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ExceptionDto exceptionDto = new ExceptionDto(status, exception.getMessage());
+        return new ResponseEntity<>(exceptionDto, status);
     }
 }
