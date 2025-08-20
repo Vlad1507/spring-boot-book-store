@@ -28,6 +28,21 @@ public class BookUtil {
         return book;
     }
 
+    public static Book getBook() {
+        Book book = new Book();
+        book.setId(1L);
+        book.setAuthor("Jack London");
+        book.setTitle("White Fang");
+        book.setIsbn("978-1-85813-740-7");
+        book.setPrice(BigDecimal.valueOf(40));
+        book.setDescription("An adventure novel about the journey"
+                + " of a wild wolf dog to domestication in Canada.");
+        book.setCoverImage("https://upload.wikimedia.org/wikipedia/commons/1/14/"
+                + "JackLondonwhitefang1.jpg");
+        book.setCategories(Set.of(getCategory()));
+        return book;
+    }
+
     public static @NonNull Category getCategory() {
         Category category = new Category();
         category.setId(1L);
