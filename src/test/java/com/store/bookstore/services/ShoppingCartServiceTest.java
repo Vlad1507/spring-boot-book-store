@@ -29,7 +29,6 @@ import com.store.bookstore.util.CartItemUtil;
 import com.store.bookstore.util.ShoppingCartUtil;
 import com.store.bookstore.util.UserUtil;
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +79,7 @@ public class ShoppingCartServiceTest {
 
         ShoppingCartDto actual = shoppingCartService.getShoppingCartWithItems(user);
 
-        Assertions.assertNotNull(actual);
+        assertNotNull(actual);
         assertEquals(expected, actual);
     }
 

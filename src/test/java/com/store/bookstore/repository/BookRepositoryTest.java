@@ -1,5 +1,8 @@
 package com.store.bookstore.repository;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.store.bookstore.models.Book;
 import com.store.bookstore.models.Category;
 import com.store.bookstore.repository.book.BookRepository;
@@ -7,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,10 +55,9 @@ public class BookRepositoryTest {
                 .findAllByCategoriesContains(Set.of(category), Pageable.unpaged());
         List<Book> bookList = bookPage.toList();
 
-        Assertions.assertEquals(1, bookList.size());
+        assertEquals(1, bookList.size());
         Book actual = bookList.stream().findFirst().get();
-
-        Assertions.assertEquals(book.getCategories().stream().findFirst().get().getName(),
+        assertEquals(book.getCategories().stream().findFirst().get().getName(),
                 actual.getCategories().stream().findFirst().get().getName());
     }
 
@@ -72,7 +73,7 @@ public class BookRepositoryTest {
         List<Book> actual = bookRepository
                 .findAllByCategoriesContains(Set.of(category), Pageable.unpaged())
                 .getContent();
-        Assertions.assertEquals(Collections.emptyList(), actual);
+        assertEquals(Collections.emptyList(), actual);
     }
 
     @Test
@@ -93,7 +94,7 @@ public class BookRepositoryTest {
 
         Book byId = bookRepository.findById(book.getId()).orElseThrow();
 
-        Assertions.assertEquals(1, byId.getId());
+        assertEquals(1, byId.getId());
     }
 
     @Test
@@ -112,7 +113,7 @@ public class BookRepositoryTest {
         Book book = new Book();
         book.setId(999L);
 
-        Assertions.assertThrows(NoSuchElementException.class,
+        assertThrows(NoSuchElementException.class,
                 () -> bookRepository.findById(book.getId()).orElseThrow());
     }
 }

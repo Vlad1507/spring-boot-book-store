@@ -55,12 +55,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return shoppingCartMapper.toDto(shoppingCartByUser);
     }
 
-    private Book getBook(CartItemRequestDto cartItemRequestDto) {
-        return bookRepository.findById(cartItemRequestDto.bookId()).orElseThrow(
-                () -> new EntityNotFoundException("Can't find a book by id: "
-                        + cartItemRequestDto.bookId()));
-    }
-
     @Override
     public ShoppingCartDto updateCartItemQuantity(
             User user, Long itemId,
@@ -86,6 +80,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUser(user);
         shoppingCartRepository.save(shoppingCart);
+    }
+
+    private Book getBook(CartItemRequestDto cartItemRequestDto) {
+        return bookRepository.findById(cartItemRequestDto.bookId()).orElseThrow(
+                () -> new EntityNotFoundException("Can't find a book by id: "
+                        + cartItemRequestDto.bookId()));
     }
 
     private ShoppingCart getShoppingCart(User user) {
