@@ -40,22 +40,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto createOrder(User user, OrderRequestDto orderRequestDto) {
-        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(user.getId())
-                .orElseThrow(
-                        () -> new EntityNotFoundException("Can't get a shopping cart "
-                                + "by user id: " + user.getId())
-        );
+        ShoppingCart shoppingCart = getShoppingCart(user);
         Set<OrderItem> orderItems = getOrderItemsFromShoppingCartOrThrowIfEmpty(shoppingCart);
         shoppingCart.clear();
         shoppingCartRepository.save(shoppingCart);
-        Order order = new Order();
-        order.setTotal(getTotalPrice(orderItems));
-        order.setUser(user);
-        order.setShippingAddress(orderRequestDto.shippingAddress());
-        order.setOrderDate(LocalDateTime.now());
-        order.setStatus(Order.Status.PENDING);
-        order.setOrderItems(orderItems);
-        orderItems.forEach(orderItem -> orderItem.setOrder(order));
+        Order order = getOrder(user, orderRequestDto, orderItems);
         orderRepository.save(order);
         return orderMapper.toDto(order);
     }
@@ -98,6 +87,28 @@ public class OrderServiceImpl implements OrderService {
                 );
         orderById.setStatus(Order.Status.valueOf(status.toUpperCase()));
         return orderMapper.toDto(orderRepository.save(orderById));
+    }
+
+    private static Order getOrder(User user,
+                                  OrderRequestDto orderRequestDto,
+                                  Set<OrderItem> orderItems) {
+        Order order = new Order();
+        order.setTotal(getTotalPrice(orderItems));
+        order.setUser(user);
+        order.setShippingAddress(orderRequestDto.shippingAddress());
+        order.setOrderDate(LocalDateTime.now());
+        order.setStatus(Order.Status.PENDING);
+        order.setOrderItems(orderItems);
+        orderItems.forEach(orderItem -> orderItem.setOrder(order));
+        return order;
+    }
+
+    private ShoppingCart getShoppingCart(User user) {
+        return shoppingCartRepository.findByUserId(user.getId())
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Can't get a shopping cart "
+                                + "by user id: " + user.getId())
+                );
     }
 
     private Set<OrderItem> getOrderItemsFromShoppingCartOrThrowIfEmpty(ShoppingCart shoppingCart) {
