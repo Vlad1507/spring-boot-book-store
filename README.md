@@ -15,29 +15,41 @@ create an account and use it for managing it own shopping cart and place orders.
 * **Tools:** JUnit 5.11.3, Mockito 5.14.2, Maven 3.8.6, Test containers 1.20.4, Liquibase 4.29.2, Swagger 2.7.0, Docker 28.3.2
 
 ## Instructions
-
-* Clone the [project](https://github.com/Vlad1507/spring-boot-book-store) on your computer.
+* Clone the [project](https://github.com/Vlad1507/spring-boot-book-store) on your computer. Use 
+  command:
+```git clone command
+git clone https://github.com/Vlad1507/spring-boot-book-store.git
+```
+or New > Project from Version Control > and add as url HTTPS or SSH (if it is configured), if 
+you use IntelliJ IDEA
+```SSH
+git@github.com:Vlad1507/spring-boot-book-store.git
+```
 * Create .env file in the root folder and specify your docker and local ports, add database connection information (you can pull out database from Docker HUB) .
-* Run docker
+* Run docker. Required to install Docker version 28.3.2 or higher
 #### Example of .env file
 ```.env
-SPRING_LOCAL_PORT=<insert-your-spring-local-port>
-SPRING_DOCKER_PORT=<insert-your-spring-docker-port>
-
 JWT_SECRET=<insert-your-jwt-secret-key>
 JWT_EXPIRATION=<insert-your-jwt-expiration>
 
-MYSQL_DATABASE=<insert-your-mysql-database>
-MYSQL_USERNAME=<insert-your-mysql-username>
-MYSQL_PASSWORD=<insert-your-mysql-password>
+MYSQL_DATABASE=book_store
+MYSQL_USER=mysql_user
+MYSQL_PASSWORD=qwerty123
 
-MYSQL_ROOT_PASSWORD=<insert-your-mysql-root-password>
+MYSQL_ROOT_PASSWORD=root123
 
-MYSQL_LOCAL_PORT=<insert-your-mysql-local-port>
-MYSQL_DOCKER_PORT=<insert-your-mysql-docker-port>
-DEBUG_PORT=<insert-your-debug-port>
+MYSQL_LOCAL_PORT=3307
+MYSQL_DOCKER_PORT=3306
+
+SPRING_LOCAL_PORT=8081
+SPRING_DOCKER_PORT=8080
+DEBUG_PORT=5005
 ```
-* Navigate to the root folder of project and build docker image  
+* Navigate to the root of the project folder using the terminal (command line) in the Docker Desktop application. 
+``` terminal
+cd IdeaProjects/spring-boot-book-store
+```
+* Build docker image  
 ```console
 docker build -t your-image-name:tag .
 ``` 
@@ -46,6 +58,7 @@ docker build -t your-image-name:tag .
 docker-compose up
 ```
 * Default URI for docker server http://localhost:8081
+* You can change the port you want in the .env file
 * For local project usage required are next components:  
   - Java 22 version or newer and Maven 3.8.6 version or newer.
   - The database can be applied from the container (pulled from DockerHUB). 
